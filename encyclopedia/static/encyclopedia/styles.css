@@ -5,7 +5,7 @@ body {
 }
 
 code {
-  white-space: pre;
+  /* white-space: pre; */
 }
 
 h1 {
@@ -30,7 +30,7 @@ textarea {
 
 .sidebar {
   background-color: #f0f0f0;
-  height: 100vh;
+  height: calc(100vh - 20px);
   padding: 20px;
 }
 

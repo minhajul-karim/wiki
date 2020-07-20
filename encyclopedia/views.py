@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.core.files.storage import default_storage
 
 import markdown2
 
 from . import util
+from .forms import ContentForm
 
 
 def index(request):
     """List of all available wiki entries."""
+    if request.method == "POST":
+        form = ContentForm(request.POST)
+        if form.is_valid():
+            return redirect("index")
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
@@ -52,4 +55,24 @@ def search(request):
 
     return render(request, "encyclopedia/error.html", {
         "message": "Method not allowed."
+    })
+
+
+def create_page(request):
+    """
+    Create a new page.
+    This function should be removed as this violates REST methodology
+    and serve this pupose from '/' endpoint instead.
+    """
+    if request.method == "POST":
+        form = ContentForm(request.POST)
+        if form.is_valid():
+            title = request.POST["title"].lower()
+            content = request.POST["content"]
+            util.save_entry(title, content)
+            return redirect("display_entry", title=title)
+    else:
+        form = ContentForm()
+    return render(request, "encyclopedia/create_page.html", {
+        "form": form
     })
