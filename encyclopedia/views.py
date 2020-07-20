@@ -1,5 +1,7 @@
+import random
 import markdown2
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 from . import util
 from .forms import ContentForm, EditContentForm
@@ -94,3 +96,10 @@ def edit(request, title):
         "form": form,
         "title": title
     })
+
+
+def random_page(request):
+    """Displays a random page."""
+    files = util.list_entries()
+    random_index = random.randint(0, len(files) - 1)
+    return redirect("display_entry", title=files[random_index])
