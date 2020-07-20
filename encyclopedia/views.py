@@ -1,17 +1,12 @@
+import markdown2
 from django.shortcuts import render, redirect
 
-import markdown2
-
 from . import util
-from .forms import ContentForm
+from .forms import ContentForm, EditContentForm
 
 
 def index(request):
     """List of all available wiki entries."""
-    if request.method == "POST":
-        form = ContentForm(request.POST)
-        if form.is_valid():
-            return redirect("index")
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
@@ -72,7 +67,30 @@ def create_page(request):
             util.save_entry(title, content)
             return redirect("display_entry", title=title)
     else:
-        form = ContentForm()
+        form = ContentForm(
+            initial={"content": "# Page Title\n\nWrite in Markdown here."})
     return render(request, "encyclopedia/create_page.html", {
         "form": form
+    })
+
+
+def edit(request, title):
+    """
+    Display existing content for GET request.
+    Save edited content for POST request.
+    """
+    if request.method == "POST":
+        form = EditContentForm(request.POST)
+        if form.is_valid():
+            new_content = request.POST["content"]
+            util.save_entry(title, new_content)
+            return redirect("display_entry", title=title)
+    else:
+        content = util.get_entry(title)
+        form = EditContentForm(initial={
+            "content": content
+        })
+    return render(request, "encyclopedia/edit_page.html", {
+        "form": form,
+        "title": title
     })

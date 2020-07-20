@@ -1,15 +1,15 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-Create New Page - Encyclopedia
+Edit {{ title | title }} - Encyclopedia
 {% endblock %}
 
 {% load crispy_forms_tags %}
 
 {% block body %}
 <div id="create-page-form" class="px-3">
-    <h1>Create new page</h1>
-    <form action="/create-page" method="POST" class="mt-4">
+    <h1>Edit this page</h1>
+    <form action="/wiki/edit/{{title}}" method="POST" class="mt-4">
         {% csrf_token %}
         {{ form | crispy }}
         <button type="submit" class="btn btn-primary">Save</button>
