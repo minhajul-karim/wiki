@@ -1,7 +1,6 @@
 import random
 import markdown2
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 
 from . import util
 from .forms import ContentForm, EditContentForm
